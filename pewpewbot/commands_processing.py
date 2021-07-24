@@ -229,12 +229,15 @@ async def process_code(message: types.Message, manager: Manager, **kwargs):
 
 @safe_dzzzr_interaction
 async def update_level(message: types.Message, manager: Manager, **kwargs):
-    if len(message.text) >= len("/st "):
-        dict_or_url = message.text[3:].strip()
-        if not dict_or_url.startswith('{'):
-            status_dict = requests.get(dict_or_url).text
+    status_ref = utils.trim_command_name(message, kwargs['command_name'])
+    if len(status_ref):
+        if status_ref.startswith('{'):
+            status_dict = status_ref
+        elif '/' in status_ref:
+            status_dict = requests.get(status_ref).text
         else:
-            status_dict = dict_or_url
+            with open(f'test_game_states/{status_ref}') as f:
+                status_dict = f.readline()
         try:
             game_status = StatusSchema(partial=True, unknown=EXCLUDE).load(literal_eval(status_dict))
         except Exception as e:

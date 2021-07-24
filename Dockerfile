@@ -9,5 +9,6 @@ RUN apk add --update alpine-sdk chromium chromium-chromedriver && \
 WORKDIR /app
 ENV PYTHONPATH "/app"
 COPY ./pewpewbot /app/pewpewbot
+COPY ./test_game_states /app/test_game_states
 
 CMD ["python", "pewpewbot/bot.py"]
